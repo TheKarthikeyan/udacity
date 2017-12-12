@@ -1,10 +1,18 @@
 import math
+from decimal import Decimal, getcontext
+
+getcontext().prec = 30
+
 class Vector(object):
+
+    CANNOT_NORMALIZE_ZERO_VECTOR_MSG = 'Cannot normalize the zero vector'
+
+
     def __init__(self, coordinates):
         try:
             if not coordinates:
                 raise ValueError
-            self.coordinates = tuple(coordinates)
+            self.coordinates = tuple([Decimal(x) for x in coordinates])
             self.dimension = len(coordinates)
 
         except ValueError:
@@ -63,7 +71,27 @@ class Vector(object):
 
     def normalise(self):
         try:
-            magnitude = 1./self.magnitude()
+            magnitude = Decimal(1./self.magnitude())
             return self.scalar_mult(magnitude)
         except ZeroDivisionError:
-            raise Exception("Cannot normalise zero vector")
+            raise Exception(self.CANNOT_NORMALIZE_ZERO_VECTOR_MSG)
+
+    def dot_product(self,v):
+        return sum([x*y for x,y in zip(self.coordinates,v.coordinates)])
+
+    def angle_between_radians(self,v, in_degrees=False):
+       try:
+            u1 = self.normalise()
+            u2 = v.normalise()
+            angle_in_radians = math.acos(u1.dot_product(u2))
+
+            if in_degrees:
+                degrees_per_radian = 180. / math.pi
+                return angle_in_radians*degrees_per_radian
+            else:
+                return angle_in_radians
+       except Exception as e:
+            if str(e) == self.CANNOT_NORMALIZE_ZERO_VECTOR_MSG:
+                raise Exception('Cannot compute an angle with the zero vector')
+            else:
+                raise e

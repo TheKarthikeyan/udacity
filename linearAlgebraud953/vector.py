@@ -1,3 +1,4 @@
+import math
 class Vector(object):
     def __init__(self, coordinates):
         try:
@@ -52,10 +53,17 @@ class Vector(object):
         #     i+=1;
         return Vector(li)
 
-    def mult(self,m):
+    def scalar_mult(self,m):
         li = [ m*i for i in self.coordinates ]
         return Vector(li)
-v1 = Vector((1.671,-1.012,-0.318))
-v2 = Vector((1,2,3))
 
-print v1.sum(v2)
+    def magnitude(self):
+        coordinates_squared = [i**2 for i in self.coordinates]
+        return math.sqrt(sum(coordinates_squared))
+
+    def normalise(self):
+        try:
+            magnitude = 1./self.magnitude()
+            return self.scalar_mult(magnitude)
+        except ZeroDivisionError:
+            raise Exception("Cannot normalise zero vector")

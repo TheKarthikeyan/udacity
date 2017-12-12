@@ -79,7 +79,7 @@ class Vector(object):
     def dot_product(self,v):
         return sum([x*y for x,y in zip(self.coordinates,v.coordinates)])
 
-    def angle_between_radians(self,v, in_degrees=False):
+    def angle_between(self,v, in_degrees=False):
        try:
             u1 = self.normalise()
             u2 = v.normalise()

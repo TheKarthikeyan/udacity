@@ -95,3 +95,19 @@ class Vector(object):
                 raise Exception('Cannot compute an angle with the zero vector')
             else:
                 raise e
+    def is_orthogonal_to(self, v, tolerance = 1e-10):
+        return abs(self.dot_product(v)) < tolerance;
+
+    def is_zero(self, tolerance=1e-10):
+        return self.magnitude() < tolerance;
+
+    def is_parallel_to(self, v):
+        return (self.is_zero() or
+                v.is_zero() or
+                self.angle_between(v) == 0 or
+                self.angle_between(v) == math.pi)
+
+v1 = Vector([-2.328,-7.284, -1.214]);
+v2 = Vector([0,0,0]);
+
+print v1.is_parallel_to(v2);

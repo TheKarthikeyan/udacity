@@ -96,10 +96,10 @@ class Vector(object):
             else:
                 raise e
     def is_orthogonal_to(self, v, tolerance = 1e-10):
-        return abs(self.dot_product(v)) < tolerance;
+        return abs(self.dot_product(v)) < tolerance
 
     def is_zero(self, tolerance=1e-10):
-        return self.magnitude() < tolerance;
+        return self.magnitude() < tolerance
 
     def is_parallel_to(self, v):
         return (self.is_zero() or
@@ -107,7 +107,25 @@ class Vector(object):
                 self.angle_between(v) == 0 or
                 self.angle_between(v) == math.pi)
 
-v1 = Vector([-2.328,-7.284, -1.214]);
-v2 = Vector([0,0,0]);
+    def component_orthogonal_to(self, basis):
+        try:
+            projection = self.component_parallel_to(basis)
+            return self.diff(projection)
 
-print v1.is_parallel_to(v2);
+        except Exception as e:
+            if str(e) == self.NO_UNIQUE_PARALLEL_COMPONENT_MSG:
+                raise Exception(self.NO_UNIQUE_PARALLEL_COMPONENT_MSG)
+            else:
+                raise e
+
+    def component_parallel_to(self, basis):
+        try:
+            u = basis.normalise()
+            weight = self.dot_product(u);
+            return u.scalar_mult(weight);
+
+        except Exception as e:
+            if str(e) == self.NO_UNIQUE_PARALLEL_COMPONENT_MSG:
+                raise Exception(self.NO_UNIQUE_PARALLEL_COMPONENT_MSG)
+            else:
+                raise e
